@@ -6,12 +6,15 @@ import Vue from 'vue'
 import axios from 'axios'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
 import App from './App'
 import router from './router'
 import DatePicker from '@/components/DatePicker'
 import Pagination from '@/components/Pagination.vue'
 
 Vue.use(ElementUI, {size: 'small'})
+Vue.use(mavonEditor)
 
 Vue.component('date-picker', DatePicker)
 Vue.component('pagination', Pagination)
