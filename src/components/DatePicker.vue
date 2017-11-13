@@ -1,18 +1,13 @@
 <template>
   <div class="block">
     <el-date-picker
-      @change="getDate"
       v-model="value"
-      value-format="yyyy-MM-dd"
-      format="yyyy-MM-dd"
-      type="daterange"
-      align="right"
-      unlink-panels
+      type="date"
       :editable=false
-      range-separator="至"
-      start-placeholder="开始日期"
-      end-placeholder="结束日期"
-      :picker-options="pickerOptions">
+      :format="yyyy-MM-dd"
+      :value-format="yyyy-MM-dd"
+      placeholder="选择日期"
+      :picker-options="pickerOptions0">
     </el-date-picker>
   </div>
 </template>
@@ -21,40 +16,24 @@
   export default {
     data () {
       return {
-        pickerOptions: {
-          shortcuts: [{
-            text: '最近一周',
-            onClick (picker) {
-              const end = new Date()
-              const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
-              picker.$emit('pick', [start, end])
-            }
-          }, {
-            text: '最近一月',
-            onClick (picker) {
-              const end = new Date()
-              const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
-              picker.$emit('pick', [start, end])
-            }
-          }, {
-            text: '最近三月',
-            onClick (picker) {
-              const end = new Date()
-              const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
-              picker.$emit('pick', [start, end])
-            }
-          }]
+        pickerOptions0: {
+          disabledDate (time) {
+            return time.getTime() > Date.now()
+          }
         },
         value: ''
       }
     },
     methods: {
       getDate (val) {
-        this.$emit('pick', val)
+        this.$emit('datePick', val)
       }
     }
   }
 </script>
+<style scoped>
+  .block{
+    display: inline-block;
+  }
+
+</style>

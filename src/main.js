@@ -16,7 +16,7 @@ Vue.use(ElementUI, {size: 'small'})
 Vue.component('date-picker', DatePicker)
 Vue.component('pagination', Pagination)
 
-axios.defaults.withCredentials = true
+axios.defaults.withCredentials = false
 Vue.prototype.$axios = axios
 Vue.config.productionTip = false
 
