@@ -1,15 +1,15 @@
 <template>
   <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-    <el-form-item label="分类" prop="title">
-      <el-input v-model="ruleForm.title" class="title"></el-input>
+    <el-form-item label="分类" prop="name">
+      <el-input v-model="ruleForm.name" class="name"></el-input>
     </el-form-item>
-    <el-form-item label="父分类" prop="fatherTitle">
+    <el-form-item label="父分类" prop="fatherName">
       <el-cascader
         :options="options"
-        v-model="ruleForm.fatherTitle"
+        v-model="ruleForm.fatherName"
         :show-all-levels="false"
         expand-trigger="hover"
-        clearable="true"
+        clearable=true
         change-on-select></el-cascader>
     </el-form-item>
     <el-form-item label="描述" prop="brief">
@@ -31,13 +31,13 @@ export default {
   data () {
     return {
       ruleForm: {
-        title: '',
-        fatherTitle: '',
+        name: '',
+        fatherName: '',
         brief: '',
         image: ''
       },
       rules: {
-        title: [
+        name: [
           {required: true, message: '请输入标题', trigger: 'blur'},
           {min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur'}
         ]
@@ -77,13 +77,13 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           let form = {
-            title: this.ruleForm.title,
-            fatherTitle: this.ruleForm.fatherTitle,
+            name: this.ruleForm.name,
+            fatherName: this.ruleForm.fatherName,
             brief: this.ruleForm.brief,
             image: this.ruleForm.image
           }
           console.log(form)
-          let url = '/api/admin/post/add'
+          let url = '/api/admin/postcatecory/add'
           let that = this
           that.$axios.post(url, form).then(function (res) {
             console.log(`查询ok`)
@@ -113,7 +113,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
-.title, .brief, .image {
+.name, .brief, .image {
   max-width: 500px;
 }
 </style>
