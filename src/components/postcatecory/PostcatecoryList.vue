@@ -10,6 +10,12 @@
       <el-table-column prop="name" label="分类"></el-table-column>
       <el-table-column prop="fatherName" label="父分类"></el-table-column>
       <el-table-column prop="ctime" label="日期"></el-table-column>
+       <el-table-column prop="_id" label="操作">
+        <template slot-scope="scope">
+          <el-button @click="handleClick(scope.row)" type="primary" size="small">编辑</el-button>
+          <el-button type="danger" size="small">删除</el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <pagination v-on:getPageData="getTablePageData" :total-num="totalNum"></pagination>
   </div>
@@ -20,6 +26,7 @@
     name: 'PostcatecoryList',
     data () {
       const item = {
+        _id: 'sjkfldsjkf',
         name: '三国',
         fatherName: '王小虎',
         ctime: '2016-05-02 00:10:20'
@@ -27,6 +34,7 @@
       return {
         tableData: Array(2).fill(item),
         totalNum: 300,
+        _id: 'sjkfldsjkf',
         ctime: '',
         name: '',
         fatherName: ''

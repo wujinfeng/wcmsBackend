@@ -1,110 +1,35 @@
 <template>
-  <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-    <el-form-item label="分类" prop="title">
-      <el-input v-model="ruleForm.title" class="title"></el-input>
-    </el-form-item>
-    <el-form-item label="父分类" prop="fatherTitle">
-      <el-cascader
-        :options="options"
-        v-model="ruleForm.fatherTitle"
-        :show-all-levels="false"
-        expand-trigger="hover"
-        clearable="true"
-        change-on-select></el-cascader>
-    </el-form-item>
-    <el-form-item label="描述" prop="brief">
-      <el-input type="textarea" v-model="ruleForm.brief" class="brief"></el-input>
-    </el-form-item>
-    <el-form-item label="图片" prop="image">
-      <el-input v-model="ruleForm.image" class="image" placeholder="图片uri"></el-input>
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary" @click="submitForm('ruleForm')">创建</el-button>
-      <el-button @click="resetForm('ruleForm')">重置</el-button>
-    </el-form-item>
-  </el-form>
+  <el-upload
+    class="upload"
+    action="https://jsonplaceholder.typicode.com/posts/"
+    :on-preview="handlePreview"
+    :on-remove="handleRemove"
+    multiple
+    :limit="10"
+    :on-exceed="handleExceed"
+    :file-list="fileList">
+    <el-button size="small" type="primary">点击上传</el-button>
+    <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+  </el-upload>
 </template>
 
 <script>
 export default {
-  name: 'PostcatecoryAdd',
+  name: 'MediaAdd',
   data () {
     return {
-      ruleForm: {
-        title: '',
-        fatherTitle: '',
-        brief: '',
-        image: ''
-      },
-      rules: {
-        title: [
-          {required: true, message: '请输入标题', trigger: 'blur'},
-          {min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur'}
-        ]
-      },
-      options: [{
-        value: 'zhinan',
-        label: '指南',
-        children: [ {
-          value: 'daohang',
-          label: '导航',
-          children: [{
-            value: 'cexiangdaohang',
-            label: '侧向导航'
-          }, {
-            value: 'dingbudaohang',
-            label: '顶部导航'
-          }]
-        }]
-      }, {
-        value: 'ziyuan',
-        label: '资源',
-        children: [{
-          value: 'axure',
-          label: 'Axure Components'
-        }, {
-          value: 'sketch',
-          label: 'Sketch Templates'
-        }, {
-          value: 'jiaohu',
-          label: '组件交互文档'
-        }]
-      }]
+      fileList: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}]
     }
   },
   methods: {
-    submitForm (formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          let form = {
-            title: this.ruleForm.title,
-            fatherTitle: this.ruleForm.fatherTitle,
-            brief: this.ruleForm.brief,
-            image: this.ruleForm.image
-          }
-          console.log(form)
-          let url = '/api/admin/post/add'
-          let that = this
-          that.$axios.post(url, form).then(function (res) {
-            console.log(`查询ok`)
-            if (res.status === 200 && res.data.status === 200) {
-              alert('添加成功')
-            } else {
-              alert('添加失败')
-            }
-          }).catch(function (err) {
-            console.log(`查询err: ${err}`)
-            console.log(err)
-            alert('添加失败')
-          })
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
+    handleRemove (file, fileList) {
+      console.log(file, fileList)
     },
-    resetForm (formName) {
-      this.$refs[formName].resetFields()
+    handlePreview (file) {
+      console.log(file)
+    },
+    handleExceed (files, fileList) {
+      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
     }
   }
 }
@@ -112,8 +37,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
-.title, .brief, .image {
+.upload{
   max-width: 500px;
 }
 </style>

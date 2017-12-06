@@ -2,34 +2,29 @@
   <div>
     <el-row :gutter="10">
       <el-date-picker
-        v-model="publishedDate"
+        v-model="ctime"
         type="date"
         :editable="false"
         format="yyyy-MM-dd"
         value-format="yyyy-MM-dd"
-        placeholder="选择日期"
+        placeholder="创建日期"
         :picker-options="pickerOptions0">
       </el-date-picker>
       <el-input v-model="title" placeholder="标题"></el-input>
-      <el-input v-model="author" placeholder="作者"></el-input>
-      <el-select v-model="postcatecory" placeholder="分类">
-        <el-option label="分类一类" value="1"></el-option>
-        <el-option label="分类二类" value="2"></el-option>
-      </el-select>
-      <el-select v-model="status" placeholder="状态">
-        <el-option label="已发布" value="2"></el-option>
-        <el-option label="草稿" value="1"></el-option>
-        <el-option label="私密" value="3"></el-option>
-      </el-select>
       <el-button type="primary" icon="el-icon-search" @click="search">查询</el-button>
     </el-row>
     <hr>
     <el-table :data="tableData">
+      <el-table-column prop="address" label="图片"></el-table-column>
       <el-table-column prop="title" label="标题"></el-table-column>
-      <el-table-column prop="author" label="作者"></el-table-column>
-      <el-table-column prop="postcatecory" label="分类"></el-table-column>
-      <el-table-column prop="status" label="状态"></el-table-column>
-      <el-table-column prop="ctime" label="日期"></el-table-column>
+      <el-table-column prop="brief" label="简介"></el-table-column>
+      <el-table-column prop="ctime" label="创建日期"></el-table-column>
+      <el-table-column prop="_id" label="操作">
+        <template slot-scope="scope">
+          <el-button @click="handleClick(scope.row)" type="primary" size="small">编辑</el-button>
+          <el-button type="danger" size="small">删除</el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <pagination v-on:getPageData="getTablePageData" :total-num="totalNum"></pagination>
   </div>
@@ -37,13 +32,12 @@
 
 <script>
   export default {
-    name: 'PostList',
+    name: 'MediaList',
     data () {
       const item = {
+        _id: 'sjkfldsjkf',
         title: '三国',
-        author: '王小虎',
-        postcatecory: '科技',
-        status: '已发布',
+        brief: '科技',
         ctime: '2016-05-02 00:10:20'
       }
       return {
@@ -54,11 +48,10 @@
         },
         tableData: Array(2).fill(item),
         totalNum: 300,
-        publishedDate: '',
+        _id: '',
         title: '',
-        author: '',
-        postcatecory: '',
-        status: ''
+        brief: '',
+        ctime: ''
       }
     },
     methods: {
@@ -68,20 +61,15 @@
         console.log(currentPage, pageSize)
         const item = {
           title: '三国2',
-          author: '王小虎',
-          postcatecory: '科技',
-          status: '已发布',
+          brief: 'sads',
           ctime: '2016-05-02 00:10:20'
         }
         this.tableData = Array(6).fill(item)
       },
       search () {
         let params = {
-          publishedDate: this.publishedDate,
           title: this.title,
-          author: this.author,
-          postcatecory: this.postcatecory,
-          status: this.status
+          ctime: this.ctime
         }
         console.log(params)
         let that = this

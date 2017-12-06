@@ -30,6 +30,12 @@
       <el-table-column prop="postcatecory" label="分类"></el-table-column>
       <el-table-column prop="status" label="状态"></el-table-column>
       <el-table-column prop="ctime" label="日期"></el-table-column>
+       <el-table-column  label="操作">
+        <template slot-scope="scope">
+          <el-button @click="handleClick(scope.row)" type="primary" size="small">编辑</el-button>
+          <el-button type="danger" size="small">删除</el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <pagination v-on:getPageData="getTablePageData" :total-num="totalNum"></pagination>
   </div>
@@ -40,6 +46,7 @@
     name: 'PostList',
     data () {
       const item = {
+        _id: 'sjkfldsjkf',
         title: '三国',
         author: '王小虎',
         postcatecory: '科技',
@@ -55,6 +62,7 @@
         tableData: Array(2).fill(item),
         totalNum: 300,
         publishedDate: '',
+        _id: 'sjkfldsjkf',
         title: '',
         author: '',
         postcatecory: '',
