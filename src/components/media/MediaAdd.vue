@@ -1,9 +1,13 @@
 <template>
   <el-upload
     class="upload"
-    action="https://jsonplaceholder.typicode.com/posts/"
+    action="/api/admin/media/add/"
     :on-preview="handlePreview"
     :on-remove="handleRemove"
+    :before-upload="beforeUpload"
+    :on-error="uploadError"
+    :on-success="uploadSuccess"
+    name="image"
     multiple
     :limit="10"
     :on-exceed="handleExceed"
@@ -14,30 +18,61 @@
 </template>
 
 <script>
-export default {
-  name: 'MediaAdd',
-  data () {
-    return {
-      fileList: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}]
-    }
-  },
-  methods: {
-    handleRemove (file, fileList) {
-      console.log(file, fileList)
+  export default {
+    name: 'MediaAdd',
+    data () {
+      return {
+        fileList: []
+      }
     },
-    handlePreview (file) {
-      console.log(file)
-    },
-    handleExceed (files, fileList) {
-      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+    methods: {
+      handleRemove (file, fileList) {  // 文件列表移除文件时的钩子
+        console.log('handleRemove:')
+        console.log(file)
+        console.log(fileList)
+      },
+      handlePreview (file) { // 点击已上传的文件链接时的钩子, 可以通过 file.response 拿到服务端返回数据
+        console.log('handlePreview:')
+        console.log(file)
+      },
+      handleExceed (files, fileList) { // 文件超出个数限制时的钩子
+        this.$message.warning(`当前限制选择 10 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+      },
+      // 上传成功后的回调
+      uploadSuccess (response, file, fileList) {
+        console.log('上传成功')
+        console.log(response)
+        console.log(file)
+        console.log(fileList)
+      },
+      // 上传错误
+      uploadError (err, file, fileList) {
+        console.log('上传失败，请重试！')
+        console.log(err)
+      },
+      beforeUpload (file) {
+        let filename = file.name
+        let extension = filename.substr(filename.lastIndexOf('.') + 1).toLowerCase()
+        let isLt2M = file.size / 1024 / 1024 < 10
+        console.log(extension, isLt2M)
+
+        if (!(extension === 'jpg' || extension === 'png')) {
+          console.log('图片格式错误!' + extension)
+          return false
+        }
+        if (!isLt2M) {
+          console.log('上传模板大小不能超过 10MB!')
+          return false
+        }
+        return true
+      }
     }
   }
-}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.upload{
-  max-width: 500px;
-}
+  .upload {
+    max-width: 500px;
+  }
 </style>
