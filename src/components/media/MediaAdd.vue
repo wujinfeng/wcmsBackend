@@ -1,20 +1,20 @@
 <template>
-  <el-upload
-    class="upload"
-    action="/api/admin/media/add/"
-    :on-preview="handlePreview"
-    :on-remove="handleRemove"
-    :before-upload="beforeUpload"
-    :on-error="uploadError"
-    :on-success="uploadSuccess"
-    name="image"
-    multiple
-    :limit="10"
-    :on-exceed="handleExceed"
-    :file-list="fileList">
-    <el-button size="small" type="primary">点击上传</el-button>
-    <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-  </el-upload>
+    <el-upload
+      class="upload"
+      action="/api/admin/media/add/"
+      :on-preview="handlePreview"
+      :on-remove="handleRemove"
+      :before-upload="beforeUpload"
+      :on-error="uploadError"
+      :on-success="uploadSuccess"
+      name="image"
+      multiple
+      :limit="10"
+      :on-exceed="handleExceed"
+      :file-list="fileList">
+      <el-button size="small" type="primary">点击上传</el-button>
+      <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+    </el-upload>
 </template>
 
 <script>
@@ -22,8 +22,14 @@
     name: 'MediaAdd',
     data () {
       return {
+        id: '',
+        picname: '',
         fileList: []
       }
+    },
+    beforeMount () {
+      this.id = this.$route.params._id
+      console.log(this.id)
     },
     methods: {
       handleRemove (file, fileList) {  // 文件列表移除文件时的钩子

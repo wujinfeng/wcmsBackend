@@ -15,15 +15,16 @@
       </el-checkbox-group>
     </el-form-item>
     <el-form-item label="分类" prop="postcategory">
-      <el-checkbox-group v-model="ruleForm.postcategory">
-        <el-checkbox label="美食" name="type"></el-checkbox>
-        <el-checkbox label="活动2" name="type"></el-checkbox>
-        <el-checkbox label="活动" name="type"></el-checkbox>
-        <el-checkbox label="品牌" name="type"></el-checkbox>
-      </el-checkbox-group>
+      <el-cascader
+        :options="options"
+        v-model="ruleForm.postcategory"
+        :show-all-levels="false"
+        expand-trigger="hover"
+        clearable=true
+        change-on-select></el-cascader>
     </el-form-item>
     <el-form-item label="图片" prop="image">
-      <el-input v-model="ruleForm.image" class="image" placeholder="图片uri"></el-input>
+      <el-input v-model="ruleForm.image" class="image" placeholder="图片目录地址"></el-input>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
@@ -38,6 +39,7 @@
     data () {
       return {
         ruleForm: {
+          id: '',
           title: '',
           top: '',
           postcategory: [],
@@ -53,8 +55,40 @@
           extended: [
             {required: true, message: '请输入内容', trigger: 'blur'}
           ]
-        }
+        },
+        options: [{
+          value: 'zhinan',
+          label: '指南',
+          children: [ {
+            value: 'daohang',
+            label: '导航',
+            children: [{
+              value: 'cexiangdaohang',
+              label: '侧向导航'
+            }, {
+              value: 'dingbudaohang',
+              label: '顶部导航'
+            }]
+          }]
+        }, {
+          value: 'ziyuan',
+          label: '资源',
+          children: [{
+            value: 'axure',
+            label: 'Axure Components'
+          }, {
+            value: 'sketch',
+            label: 'Sketch Templates'
+          }, {
+            value: 'jiaohu',
+            label: '组件交互文档'
+          }]
+        }]
       }
+    },
+    beforeMount () {
+      this.id = this.$route.params._id
+      console.log(this.id)
     },
     methods: {
       submitForm (formName) {

@@ -16,7 +16,7 @@
       <el-input type="textarea" v-model="ruleForm.brief" class="brief"></el-input>
     </el-form-item>
     <el-form-item label="图片" prop="image">
-      <el-input v-model="ruleForm.image" class="image" placeholder="图片uri目录地址"></el-input>
+      <el-input v-model="ruleForm.image" class="image" placeholder="图片目录地址"></el-input>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
@@ -31,6 +31,7 @@ export default {
   data () {
     return {
       ruleForm: {
+        id: '',
         name: '',
         fatherName: '',
         brief: '',
@@ -71,6 +72,10 @@ export default {
         }]
       }]
     }
+  },
+  beforeMount () {
+    this.id = this.$route.params._id
+    console.log(this.id)
   },
   methods: {
     submitForm (formName) {

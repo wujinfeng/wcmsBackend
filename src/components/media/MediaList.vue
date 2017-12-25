@@ -17,12 +17,13 @@
     <el-table :data="tableData">
       <el-table-column prop="address" label="图片"></el-table-column>
       <el-table-column prop="title" label="标题"></el-table-column>
-      <el-table-column prop="brief" label="简介"></el-table-column>
       <el-table-column prop="ctime" label="创建日期"></el-table-column>
       <el-table-column prop="_id" label="操作">
         <template slot-scope="scope">
-          <el-button @click="handleClick(scope.row)" type="primary" size="small">编辑</el-button>
-          <el-button type="danger" size="small">删除</el-button>
+          <router-link :to="{name:'MediaAdd',params:{_id: scope.row._id}}">
+            <el-button type="primary" size="small">编辑</el-button>
+          </router-link>
+          <el-button type="danger" size="small" @click="del(scope.row._id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -37,7 +38,6 @@
       const item = {
         _id: 'sjkfldsjkf',
         title: '三国',
-        brief: '科技',
         ctime: '2016-05-02 00:10:20'
       }
       return {
@@ -50,7 +50,6 @@
         totalNum: 300,
         _id: '',
         title: '',
-        brief: '',
         ctime: ''
       }
     },
@@ -61,7 +60,6 @@
         console.log(currentPage, pageSize)
         const item = {
           title: '三国2',
-          brief: 'sads',
           ctime: '2016-05-02 00:10:20'
         }
         this.tableData = Array(6).fill(item)
@@ -84,6 +82,25 @@
           console.log(`查询err: ${error}`)
           that.tableData = []
         })
+      },
+      del (val) {
+        console.log(val)
+        // let id = this.item._id
+        this.$confirm('此操作将永久删除, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
       }
     }
   }
@@ -95,7 +112,8 @@
     display: inline-block;
     width: 140px;
   }
-  .el-select{
+
+  .el-select {
     width: 100px;
   }
 
