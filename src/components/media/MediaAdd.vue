@@ -46,14 +46,14 @@
       },
       // 上传成功后的回调
       uploadSuccess (response, file, fileList) {
-        console.log('上传成功')
+        this.$message({message: '上传成功！', type: 'success'})
         console.log(response)
         console.log(file)
         console.log(fileList)
       },
       // 上传错误
       uploadError (err, file, fileList) {
-        console.log('上传失败，请重试！')
+        this.$message({message: '上传失败，请重试！', type: 'error'})
         console.log(err)
       },
       beforeUpload (file) {
@@ -63,11 +63,11 @@
         console.log(extension, isLt2M)
 
         if (!(extension === 'jpg' || extension === 'png')) {
-          console.log('图片格式错误!' + extension)
+          this.$message({message: '图片格式错误!' + extension, type: 'error'})
           return false
         }
         if (!isLt2M) {
-          console.log('上传模板大小不能超过 10MB!')
+          this.$message({message: '上传模板大小不能超过 10MB!', type: 'error'})
           return false
         }
         return true
