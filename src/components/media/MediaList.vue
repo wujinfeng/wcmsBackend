@@ -17,9 +17,14 @@
     <el-table :data="tableData">
       <el-table-column prop="address" label="图片">
         <template slot-scope="scope">
-          <a :href="scope.row.address" target="_blank">
+          <a :href="scope.row.relativeDir" target="_blank">
             <img :src="scope.row.address" style="max-width: 100px;height: 50px" />
           </a>
+        </template>
+      </el-table-column>
+      <el-table-column label="目录">
+        <template slot-scope="scope">
+          {{scope.row.relativeDir + scope.row.filename}}
         </template>
       </el-table-column>
       <el-table-column prop="originalname" label="标题"></el-table-column>
@@ -113,22 +118,13 @@
           that.$axios.get('/api/admin/media/delete/' + val).then(function (res) {
             if (res.status === 200 && res.data.code === 200) {
               that.tableData.splice(index, 1)
-              that.$message({
-                type: 'success',
-                message: '删除成功!'
-              })
+              that.$message({type: 'success', message: '删除成功!'})
             } else {
-              that.$message({
-                type: 'error',
-                message: '删除失败'
-              })
+              that.$message({type: 'error', message: '删除失败'})
             }
           })
         }).catch(() => {
-          that.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
+          that.$message({type: 'info', message: '已取消删除'})
         })
       }
     },

@@ -4,6 +4,7 @@
       action="/api/admin/media/add/"
       :on-preview="handlePreview"
       :on-remove="handleRemove"
+      :before-remove="beforeRemove"
       :before-upload="beforeUpload"
       :on-error="uploadError"
       :on-success="uploadSuccess"
@@ -32,10 +33,32 @@
       console.log(this.id)
     },
     methods: {
-      handleRemove (file, fileList) {  // 文件列表移除文件时的钩子
+      handleRemove  (file, fileList) {  // 文件列表移除文件时的钩子
         console.log('handleRemove:')
+        console.log('file')
         console.log(file)
+        console.log('fileList')
         console.log(fileList)
+        return false
+      },
+      beforeRemove (file, fileList) {  // 文件列表移除文件前时的钩子
+        console.log('beforeRemove:')
+        console.log('file')
+        console.log(file)
+        let that = this
+        let id = file.response.data
+        let promise = new Promise(function (resolve, reject) {
+          that.$axios.get('/api/admin/media/delete/' + id).then(function (res) {
+            if (res.status === 200 && res.data.code === 200) {
+              that.$message({type: 'success', message: '删除成功'})
+              resolve()
+            } else {
+              that.$message({type: 'error', message: '删除失败'})
+              reject(new Error('删除失败'))
+            }
+          })
+        })
+        return promise
       },
       handlePreview (file) { // 点击已上传的文件链接时的钩子, 可以通过 file.response 拿到服务端返回数据
         console.log('handlePreview:')
@@ -47,8 +70,11 @@
       // 上传成功后的回调
       uploadSuccess (response, file, fileList) {
         this.$message({message: '上传成功！', type: 'success'})
+        console.log('response:')
         console.log(response)
+        console.log('file')
         console.log(file)
+        console.log('fileList')
         console.log(fileList)
       },
       // 上传错误
@@ -57,20 +83,16 @@
         console.log(err)
       },
       beforeUpload (file) {
-        let filename = file.name
-        let extension = filename.substr(filename.lastIndexOf('.') + 1).toLowerCase()
-        let isLt2M = file.size / 1024 / 1024 < 10
-        console.log(extension, isLt2M)
+        let isJPG = (file.type === 'image/jpeg' || file.type === 'image/png')
+        let isLt2M = file.size / 1024 / 1024 < 2
 
-        if (!(extension === 'jpg' || extension === 'png')) {
-          this.$message({message: '图片格式错误!' + extension, type: 'error'})
-          return false
+        if (!isJPG) {
+          this.$message.error('上传图片只能是 jpg,png 格式!')
         }
         if (!isLt2M) {
-          this.$message({message: '上传模板大小不能超过 10MB!', type: 'error'})
-          return false
+          this.$message.error('上传图片大小不能超过 2MB!')
         }
-        return true
+        return isJPG && isLt2M
       }
     }
   }
