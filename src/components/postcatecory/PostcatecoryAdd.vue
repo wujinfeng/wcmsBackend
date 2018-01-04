@@ -3,14 +3,16 @@
     <el-form-item label="分类" prop="name">
       <el-input v-model="ruleForm.name" class="name"></el-input>
     </el-form-item>
-    <el-form-item label="父分类" prop="fatherName">
-      <el-cascader
-        :options="options"
-        v-model="ruleForm.fatherName"
-        :show-all-levels="false"
-        expand-trigger="hover"
-        clearable=true
-        change-on-select></el-cascader>
+    <el-form-item label="父分类" prop="parentId">
+      <el-tree
+        :props="props"
+        :load="loadNode"
+        node-key="_id"
+        ref="tree"
+        lazy
+        check-strictly
+        show-checkbox>
+      </el-tree>
     </el-form-item>
     <el-form-item label="描述" prop="brief">
       <el-input type="textarea" v-model="ruleForm.brief" class="brief"></el-input>
@@ -31,9 +33,7 @@ export default {
   data () {
     return {
       ruleForm: {
-        id: '',
         name: '',
-        fatherName: '',
         brief: '',
         image: ''
       },
@@ -43,74 +43,101 @@ export default {
           {min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur'}
         ]
       },
-      options: [{
-        value: 'zhinan',
-        label: '指南',
-        children: [ {
-          value: 'daohang',
-          label: '导航',
-          children: [{
-            value: 'cexiangdaohang',
-            label: '侧向导航'
-          }, {
-            value: 'dingbudaohang',
-            label: '顶部导航'
-          }]
-        }]
-      }, {
-        value: 'ziyuan',
-        label: '资源',
-        children: [{
-          value: 'axure',
-          label: 'Axure Components'
-        }, {
-          value: 'sketch',
-          label: 'Sketch Templates'
-        }, {
-          value: 'jiaohu',
-          label: '组件交互文档'
-        }]
-      }]
+      props: {
+        label: 'name',
+        children: 'childrenArr',
+        isLeaf: 'leaf'
+      },
+      id: '',
+      options: [],
+      lastCatecory: ''
     }
   },
   beforeMount () {
     this.id = this.$route.params._id
+    let that = this
     console.log(this.id)
+    if (that.id) {
+      that.$axios.get('/api/admin/postcategory/get/' + this.id).then(function (res) {
+        if (res.status === 200 && res.data.code === 200) {
+          console.log(res.data.data)
+          that.ruleForm = res.data.data
+          that.$refs.tree.setCheckedKeys(res.data.data.parentId)
+        }
+      })
+    }
   },
   methods: {
     submitForm (formName) {
-      this.$refs[formName].validate((valid) => {
+      let that = this
+      that.$refs[formName].validate((valid) => {
         if (valid) {
           let form = {
-            name: this.ruleForm.name,
-            fatherName: this.ruleForm.fatherName,
-            brief: this.ruleForm.brief,
-            image: this.ruleForm.image
+            id: that.id,
+            name: that.ruleForm.name,
+            parentId: this.$refs.tree.getCheckedKeys(),
+            brief: that.ruleForm.brief,
+            image: that.ruleForm.image
           }
           console.log(form)
-          let url = '/api/admin/postcatecory/add'
-          let that = this
+          let url = '/api/admin/postcategory/add'
+          if (that.id) {
+            url = '/api/admin/postcategory/update'
+          }
           that.$axios.post(url, form).then(function (res) {
-            console.log(`查询ok`)
-            if (res.status === 200 && res.data.status === 200) {
-              alert('添加成功')
+            console.log(`添加ok`)
+            if (res.status === 200 && res.data.code === 200) {
+              that.$message({type: 'success', message: '添加成功'})
+              // 跳转列表页
+              that.$router.push({name: 'PostcatecoryList'})
             } else {
-              alert('添加失败')
+              that.$message({type: 'error', message: '添加失败'})
             }
           }).catch(function (err) {
-            console.log(`查询err: ${err}`)
+            console.log(`添加err:`)
             console.log(err)
-            alert('添加失败')
+            that.$message({type: 'error', message: '添加失败'})
           })
         } else {
-          console.log('error submit!!')
-          return false
+          that.$message({type: 'error', message: '提交失败'})
         }
       })
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()
+    },
+    loadNode (node, resolve) {
+      // let that = this
+      console.log('active item:')
+      console.log(node)
+      let that = this
+      if (node.level === 0) {
+        that.$axios.get('/api/admin/postcategory/getall').then(function (res) {
+          if (res.status === 200 && res.data.code === 200) {
+            let arr = res.data.data
+            that.options = arr.map(function (item) {
+              return {name: item.name, _id: item._id, childrenArr: []}
+            })
+          }
+          resolve(that.options)
+        })
+      }
+      if (node.level >= 1) {
+        that.$axios.get('/api/admin/postcategory/getsub/' + node.key).then(function (res) {
+          let data = []
+          if (res.status === 200 && res.data.code === 200) {
+            let arr = res.data.data
+            console.log(arr)
+            data = arr.map(function (item) {
+              return {name: item.name, _id: item._id, childrenArr: []}
+            })
+          }
+          resolve(data)
+        })
+      }
     }
+  },
+  mounted () {
   }
 }
 </script>
@@ -118,7 +145,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
-.name, .brief, .image {
+.el-form {
   max-width: 500px;
 }
 </style>
