@@ -2,24 +2,31 @@
   <div>
     <el-row :gutter="10">
       <el-date-picker
-        v-model="publishedDate"
-        type="date"
-        :editable="false"
-        format="yyyy-MM-dd"
-        value-format="yyyy-MM-dd"
-        placeholder="选择日期"
-        :picker-options="pickerOptions0">
+        v-model="createdAt"
+        type="daterange"
+        unlink-panels
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        :picker-options="pickerOptions2">
       </el-date-picker>
       <el-input v-model="title" placeholder="标题"></el-input>
       <el-input v-model="author" placeholder="作者"></el-input>
-      <el-select v-model="postcatecory" placeholder="分类">
-        <el-option label="分类一类" value="1"></el-option>
-        <el-option label="分类二类" value="2"></el-option>
+      <el-select v-model="postcategoryId" clearable placeholder="分类">
+        <el-option
+          v-for="pc in optionsPostcategory"
+          :key="pc.value"
+          :label="pc.label"
+          :value="pc.value">
+        </el-option>
       </el-select>
-      <el-select v-model="status" placeholder="状态">
-        <el-option label="已发布" value="2"></el-option>
-        <el-option label="草稿" value="1"></el-option>
-        <el-option label="私密" value="3"></el-option>
+      <el-select v-model="status" clearable placeholder="状态">
+        <el-option
+          v-for="item in optionsStatus"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
       </el-select>
       <el-button type="primary" icon="el-icon-search" @click="search">查询</el-button>
     </el-row>
@@ -27,15 +34,23 @@
     <el-table :data="tableData">
       <el-table-column prop="title" label="标题"></el-table-column>
       <el-table-column prop="author" label="作者"></el-table-column>
-      <el-table-column prop="postcatecory" label="分类"></el-table-column>
-      <el-table-column prop="status" label="状态"></el-table-column>
-      <el-table-column prop="ctime" label="日期"></el-table-column>
+      <el-table-column label="分类">
+        <template slot-scope="scope">
+          {{scope.row.postcategoryId | contactArr }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="status" label="状态">
+        <template slot-scope="scope">
+          {{scope.row.status | getStatus }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="createdAt" label="日期"></el-table-column>
       <el-table-column prop="_id" label="操作">
         <template slot-scope="scope">
           <router-link :to="{name:'PostAdd',params:{_id: scope.row._id}}">
             <el-button type="primary" size="small">编辑</el-button>
           </router-link>
-          <el-button type="danger" size="small" @click="del(scope.row._id)">删除</el-button>
+          <el-button type="danger" size="small" @click="del(scope.row._id, scope.$index)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -47,84 +62,160 @@
   export default {
     name: 'PostList',
     data () {
-      const item = {
-        _id: 'sjkfldsjkf',
-        title: '三国',
-        author: '王小虎',
-        postcatecory: '科技',
-        status: '已发布',
-        ctime: '2016-05-02 00:10:20'
-      }
       return {
-        pickerOptions0: {
-          disabledDate (time) {
-            return time.getTime() > Date.now()
-          }
+        pickerOptions2: {
+          shortcuts: [{
+            text: '最近一周',
+            onClick (picker) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '最近一月',
+            onClick (picker) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '最近三月',
+            onClick (picker) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+              picker.$emit('pick', [start, end])
+            }
+          }]
         },
-        tableData: Array(2).fill(item),
-        totalNum: 300,
-        publishedDate: '',
-        _id: 'sjkfldsjkf',
+        createdAt: '',
+        tableData: [],
+        totalNum: 0,
+        _id: '',
         title: '',
         author: '',
-        postcatecory: '',
-        status: ''
+        postcategoryId: '',
+        status: '',
+        optionsStatus: [{
+          value: 1,
+          label: '草稿'
+        }, {
+          value: 2,
+          label: '发布'
+        }, {
+          value: 3,
+          label: '私密'
+        }],
+        optionsPostcategory: []
+      }
+    },
+    filters: {
+      contactArr: function (arr) {
+        if (!arr || !arr.length) {
+          return ''
+        }
+        return arr.map(function (o) {
+          return o.name
+        }).join('，')
+      },
+      getStatus: function (num) {
+        let text = ''
+        if (num === 1) {
+          text = '草稿'
+        } else if (num === 2) {
+          text = '发布'
+        } else if (num === 3) {
+          text = '私密'
+        }
+        return text
       }
     },
     methods: {
       getTablePageData (pagerObj) {
-        let currentPage = pagerObj.currentPage
-        let pageSize = pagerObj.pageSize
-        console.log(currentPage, pageSize)
-        const item = {
-          title: '三国2',
-          author: '王小虎',
-          postcatecory: '科技',
-          status: '已发布',
-          ctime: '2016-05-02 00:10:20'
+        let params = {
+          title: this.title,
+          currentPage: pagerObj.currentPage,
+          pageSize: pagerObj.pageSize
         }
-        this.tableData = Array(6).fill(item)
+        console.log(params)
+        let that = this
+        that.$axios.get('/api/admin/post/list', {params: params}).then(function (res) {
+          console.log(`查询ok`)
+          if (res.status === 200 && res.data.code === 200) {
+            that.tableData = res.data.data.tableData
+            that.totalNum = res.data.data.totalNum
+          } else {
+            that.tableData = []
+            that.totalNum = 0
+          }
+        }).catch((error) => {
+          console.log(`查询err: ${error}`)
+          that.tableData = []
+          that.totalNum = 0
+        })
       },
       search () {
         let params = {
-          publishedDate: this.publishedDate,
+          createdAt: this.createdAt,
           title: this.title,
           author: this.author,
-          postcatecory: this.postcatecory,
+          postcategoryId: this.postcategoryId,
           status: this.status
         }
         console.log(params)
         let that = this
         that.$axios.get('/api/admin/post/list', {params: params}).then(function (res) {
           console.log(`查询ok`)
-          if (res.status === 200 && res.data.status === 200) {
-            that.tableData = res.data.data
+          if (res.status === 200 && res.data.code === 200) {
+            that.tableData = res.data.data.tableData
+            that.totalNum = res.data.data.totalNum
           } else {
             that.tableData = []
+            that.totalNum = 0
           }
         }).catch((error) => {
           console.log(`查询err: ${error}`)
           that.tableData = []
+          that.totalNum = 0
         })
       },
-      del (val) {
-        console.log(val)
-        this.$confirm('此操作将永久删除, 是否继续?', '提示', {
+      del (val, index) {
+        let that = this
+        that.$confirm('此操作将永久删除, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
+          that.$axios.get('/api/admin/post/delete/' + val).then(function (res) {
+            if (res.status === 200 && res.data.code === 200) {
+              that.tableData.splice(index, 1)
+              that.$message({type: 'success', message: '删除成功!'})
+            } else {
+              that.$message({type: 'error', message: '删除失败'})
+            }
           })
         }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
+          that.$message({type: 'info', message: '已取消删除'})
         })
       }
+    },
+    mounted () {
+      let that = this
+      that.$axios.get('/api/admin/post/list').then(function (res) {
+        if (res.status === 200 && res.data.code === 200) {
+          that.tableData = res.data.data.tableData
+          that.totalNum = res.data.data.totalNum
+        }
+      })
+      that.$axios.get('/api/admin/postcategory/all').then(function (res) {
+        if (res.status === 200 && res.data.code === 200) {
+          that.optionsPostcategory = res.data.data.map(function (o) {
+            return {value: o._id, label: o.name}
+          })
+        }
+      })
     }
   }
 </script>
