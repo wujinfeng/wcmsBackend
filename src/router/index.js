@@ -8,14 +8,17 @@ import PostcatecoryList from '@/components/postcatecory/PostcatecoryList'
 import PostcatecoryAdd from '@/components/postcatecory/PostcatecoryAdd'
 import MediaList from '@/components/media/MediaList'
 import MediaAdd from '@/components/media/MediaAdd'
+import UserList from '@/components/user/UserList'
+import UserAdd from '@/components/user/UserAdd'
+import Password from '@/components/user/Password'
 
 Vue.use(Router)
 
 export default new Router({
   mode: 'history',
   routes: [
-    {path: '/', name: 'Index', component: Index},
     {path: '/login', name: 'Login', component: Login},
+    {path: '/', name: 'Index', component: Index},
     // 博客
     {path: '/posts', name: 'PostList', component: PostList},
     {path: '/post/add', name: 'PostAdd', component: PostAdd},
@@ -24,6 +27,10 @@ export default new Router({
     {path: '/postcatecory/add', name: 'PostcatecoryAdd', component: PostcatecoryAdd},
     // 媒体
     {path: '/medias', name: 'MediaList', component: MediaList},
-    {path: '/media/add', name: 'MediaAdd', component: MediaAdd}
+    {path: '/media/add', name: 'MediaAdd', component: MediaAdd},
+    // 用户
+    {path: '/user', name: 'UserList', component: UserList},
+    {path: '/user/password', name: 'Password', component: Password},
+    {path: '/user/add', name: 'UserAdd', component: UserAdd}
   ]
 })
