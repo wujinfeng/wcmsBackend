@@ -20,7 +20,6 @@
         <template slot="title"><i class="el-icon-setting"></i>用户</template>
         <el-menu-item :route="{name: 'UserList'}" index="4-1">用户列表</el-menu-item>
         <el-menu-item :route="{name: 'UserAdd'}" index="4-2">添加</el-menu-item>
-        <el-menu-item :route="{name: 'Password'}" index="4-3">修改密码</el-menu-item>
       </el-submenu>
     </el-menu>
   </el-aside>

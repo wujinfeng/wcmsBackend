@@ -6,7 +6,7 @@
     </el-row>
     <hr>
     <el-table :data="tableData">
-      <el-table-column prop="username" label="用户名">
+      <el-table-column prop="username" label="头像">
         <template slot-scope="scope">
           <a :href="scope.row.image" target="_blank">
             <img :src="scope.row.image" style="max-width: 100px;height: 50px" />

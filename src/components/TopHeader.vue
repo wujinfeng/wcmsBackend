@@ -3,11 +3,15 @@
     <el-dropdown>
       <i class="el-icon-setting" style="margin-right: 15px"></i>
       <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item>修改密码</el-dropdown-item>
-        <el-dropdown-item>退出</el-dropdown-item>
+          <el-dropdown-item>
+            <router-link :to="{name:'Password',params:{_id: id}}" tag="span">
+            修改密码
+            </router-link>
+          </el-dropdown-item>
+        <el-dropdown-item><span @click="quit">退出</span></el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
-    <span>{{name}}</span>
+    <span>{{username}}</span>
   </el-header>
 </template>
 
@@ -16,8 +20,20 @@ export default {
   name: 'TopHeader',
   data () {
     return {
-      name: '管理员'
+      id: '',
+      username: ''
     }
+  },
+  methods: {
+    quit () {
+      sessionStorage.removeItem('id')
+      sessionStorage.removeItem('username')
+      this.$router.push({name: 'Login'})
+    }
+  },
+  mounted () {
+    this.id = sessionStorage.getItem('id')
+    this.username = sessionStorage.getItem('username')
   }
 }
 </script>

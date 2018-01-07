@@ -1,16 +1,19 @@
 <template>
-  <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-    <el-form-item label="用户名" prop="username">
-      <el-input v-model="ruleForm.username" type="username" class="username"></el-input>
-    </el-form-item>
-    <el-form-item label="密码" prop="password">
-      <el-input v-model="ruleForm.password" type="password" class="password"></el-input>
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
-      <el-button @click="resetForm('ruleForm')">重置</el-button>
-    </el-form-item>
-  </el-form>
+  <el-card class="box-card">
+    <p class="title">后台管理</p>
+    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+      <el-form-item label="用户名" prop="username">
+        <el-input v-model="ruleForm.username" type="username" class="username" auto-complete="off"></el-input>
+      </el-form-item>
+      <el-form-item label="密码" prop="password">
+        <el-input v-model="ruleForm.password" type="password" class="password" auto-complete="off"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
+        <el-button @click="resetForm('ruleForm')">重置</el-button>
+      </el-form-item>
+    </el-form>
+  </el-card>
 </template>
 
 <script>
@@ -45,6 +48,8 @@
             that.$axios.post(url, form).then(function (res) {
               if (res.status === 200 && res.data.code === 200) {
                 that.$message({type: 'success', message: '登录成功'})
+                sessionStorage.setItem('id', res.data.data._id)
+                sessionStorage.setItem('username', res.data.data.username)
                 that.$router.push({name: 'Index'})  // 跳转首页
               } else {
                 that.$message({type: 'error', message: '登录失败'})
@@ -68,7 +73,16 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .el-form {
+  .box-card {
     max-width: 500px;
+    margin: 80px auto;
+  }
+  .title {
+    text-align: center;
+    font-size: 18px;
+  }
+  .el-form {
+    max-width: 400px;
+    margin: 40px auto;
   }
 </style>

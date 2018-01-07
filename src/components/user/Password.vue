@@ -99,7 +99,7 @@
             that.$axios.post(url, form).then(function (res) {
               if (res.status === 200 && res.data.code === 200) {
                 that.$message({type: 'success', message: '保存成功'})
-                that.$router.push({name: 'UserList'}) // 跳转列表页
+                // that.$router.push({name: 'UserList'}) // 跳转列表页
               } else {
                 that.$message({type: 'error', message: '保存失败'})
               }
