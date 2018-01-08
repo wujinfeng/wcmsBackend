@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import * as types from '@/store/mutations-types'
 export default {
   name: 'TopHeader',
   data () {
@@ -26,14 +27,13 @@ export default {
   },
   methods: {
     quit () {
-      sessionStorage.removeItem('id')
-      sessionStorage.removeItem('username')
+      this.$store.commit(types.LOGOUT)
       this.$router.push({name: 'Login'})
     }
   },
   mounted () {
-    this.id = sessionStorage.getItem('id')
-    this.username = sessionStorage.getItem('username')
+    this.id = localStorage.getItem('id')
+    this.username = localStorage.getItem('username')
   }
 }
 </script>

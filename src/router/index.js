@@ -12,10 +12,12 @@ import MediaAdd from '@/components/media/MediaAdd'
 import UserList from '@/components/user/UserList'
 import UserAdd from '@/components/user/UserAdd'
 import Password from '@/components/user/Password'
+import store from '@/store'
+import * as types from '@/store/mutations-types'
 
 Vue.use(Router)
 
-export default new Router({
+let router = new Router({
   mode: 'history',
   linkActiveClass: 'active',
   routes: [
@@ -43,3 +45,26 @@ export default new Router({
     }
   ]
 })
+
+// 页面刷新时，重新赋值token
+if (window.localStorage.getItem('token')) {
+  store.commit(types.LOGIN, window.localStorage.getItem('token'))
+}
+
+router.beforeEach(({name}, from, next) => {
+  if (sessionStorage.getItem('token')) {
+    if (name === 'Login') {
+      next('/index')
+    } else {
+      next()
+    }
+  } else {
+    if (name === 'Login') {
+      next()
+    } else {
+      next({name: 'Login'})
+    }
+  }
+})
+
+export default router

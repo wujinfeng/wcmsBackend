@@ -4,13 +4,6 @@
 
 <script>
   export default {
-    name: 'app',
-    data () {
-      return {
-      }
-    }
+    name: 'App'
   }
 </script>
-
-<style>
-</style>

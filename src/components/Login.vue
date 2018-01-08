@@ -17,13 +17,15 @@
 </template>
 
 <script>
+  // import * as types from '@/store/mutations-types'
   export default {
     name: 'UserAdd',
     data () {
       return {
         ruleForm: {
           username: '',
-          password: ''
+          password: '',
+          token: ''
         },
         rules: {
           username: [
@@ -44,12 +46,11 @@
               username: that.ruleForm.username,
               password: that.ruleForm.password
             }
-            let url = '/api/admin/user/login'
+            let url = '/api/admin/login'
             that.$axios.post(url, form).then(function (res) {
               if (res.status === 200 && res.data.code === 200) {
                 that.$message({type: 'success', message: '登录成功'})
-                sessionStorage.setItem('id', res.data.data._id)
-                sessionStorage.setItem('username', res.data.data.username)
+                // that.$store.commit(types.LOGIN, res.data.data)
                 that.$router.push({name: 'Index'})  // 跳转首页
               } else {
                 that.$message({type: 'error', message: '登录失败'})
