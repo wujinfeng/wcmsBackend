@@ -17,7 +17,7 @@
 </template>
 
 <script>
-  // import * as types from '@/store/mutations-types'
+  import * as types from '@/store/mutations-types'
   export default {
     name: 'UserAdd',
     data () {
@@ -50,7 +50,7 @@
             that.$axios.post(url, form).then(function (res) {
               if (res.status === 200 && res.data.code === 200) {
                 that.$message({type: 'success', message: '登录成功'})
-                // that.$store.commit(types.LOGIN, res.data.data)
+                that.$store.commit(types.LOGIN, res.data.data)
                 that.$router.push({name: 'Index'})  // 跳转首页
               } else {
                 that.$message({type: 'error', message: '登录失败'})

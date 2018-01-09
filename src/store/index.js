@@ -11,7 +11,7 @@ const debug = process.env.NODE_ENV !== 'production'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   state,
   mutations,
   getters,
@@ -19,3 +19,5 @@ export default new Vuex.Store({
   strict: debug,  // 设置运行模式
   plugin: debug ? [createLogger()] : [] // 调试模式则加入日志插件
 })
+
+export default store

@@ -3,8 +3,6 @@
 import '@/assets/css/main.css'
 import '@/assets/css/normalize.css'
 import Vue from 'vue'
-import Vuex from 'vuex'
-import VueRouter from 'vue-router'
 import store from './store'
 import axios from './http'
 import ElementUI from 'element-ui'
@@ -18,22 +16,18 @@ import Pagination from '@/components/Pagination.vue'
 
 Vue.use(ElementUI, {size: 'small'})
 Vue.use(mavonEditor)
-Vue.use(Vuex)
-Vue.use(VueRouter)
 
 Vue.component('date-picker', DatePicker)
 Vue.component('pagination', Pagination)
 
-axios.defaults.withCredentials = true
 Vue.prototype.$axios = axios
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  axios,
-  router,
   store,
+  router,
   template: '<App/>',
   components: { App }
 })
