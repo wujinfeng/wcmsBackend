@@ -1,8 +1,9 @@
 <template>
     <el-upload
       class="upload"
-      action="/api/admin/media/add/"
+      action="/admin/media/add"
       :on-preview="handlePreview"
+      :headers="setHeaders"
       :on-remove="handleRemove"
       :before-remove="beforeRemove"
       :before-upload="beforeUpload"
@@ -23,6 +24,9 @@
     name: 'MediaAdd',
     data () {
       return {
+        setHeaders: {
+          Authorization: `Bearer ${this.$store.state.token}`
+        },
         id: '',
         picname: '',
         fileList: []
@@ -48,7 +52,7 @@
         let that = this
         let id = file.response.data
         let promise = new Promise(function (resolve, reject) {
-          that.$axios.get('/api/admin/media/delete/' + id).then(function (res) {
+          that.$axios.get('/admin/media/delete/' + id).then(function (res) {
             if (res.status === 200 && res.data.code === 200) {
               that.$message({type: 'success', message: '删除成功'})
               resolve()

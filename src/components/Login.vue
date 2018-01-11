@@ -46,7 +46,7 @@
               username: that.ruleForm.username,
               password: that.ruleForm.password
             }
-            let url = '/api/admin/login'
+            let url = '/admin/login'
             that.$axios.post(url, form).then(function (res) {
               if (res.status === 200 && res.data.code === 200) {
                 that.$message({type: 'success', message: '登录成功'})

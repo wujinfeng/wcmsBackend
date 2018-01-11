@@ -5,7 +5,7 @@ import router from './router'
 
 // axios 配置
 axios.defaults.timeout = 5000
-// axios.defaults.baseURL = ''
+// axios.defaults.baseURL = 'http://127.0.0.1:3022'
 axios.defaults.withCredentials = true
 
 // http request 拦截器

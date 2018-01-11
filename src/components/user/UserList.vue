@@ -66,7 +66,7 @@
         }
         console.log(params)
         let that = this
-        that.$axios.get('/api/admin/user/list', {params: params}).then(function (res) {
+        that.$axios.get('/admin/user/list', {params: params}).then(function (res) {
           console.log(`查询ok`)
           if (res.status === 200 && res.data.code === 200) {
             that.tableData = res.data.data.tableData
@@ -87,7 +87,7 @@
         }
         console.log(params)
         let that = this
-        that.$axios.get('/api/admin/user/list', {params: params}).then(function (res) {
+        that.$axios.get('/admin/user/list', {params: params}).then(function (res) {
           console.log(`查询ok`)
           if (res.status === 200 && res.data.code === 200) {
             that.tableData = res.data.data.tableData
@@ -109,7 +109,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          that.$axios.get('/api/admin/user/delete/' + val).then(function (res) {
+          that.$axios.get('/admin/user/delete/' + val).then(function (res) {
             if (res.status === 200 && res.data.code === 200) {
               that.tableData.splice(index, 1)
               that.$message({type: 'success', message: '删除成功!'})
@@ -124,7 +124,7 @@
     },
     mounted () {
       let that = this
-      that.$axios.get('/api/admin/user/list').then(function (res) {
+      that.$axios.get('/admin/user/list').then(function (res) {
         if (res.status === 200 && res.data.code === 200) {
           that.tableData = res.data.data.tableData
           that.totalNum = res.data.data.totalNum

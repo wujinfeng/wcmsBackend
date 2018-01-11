@@ -58,7 +58,7 @@
               newpassword2: this.ruleForm.newpassword2
             }
             console.log(form)
-            let url = '/api/admin/post/add'
+            let url = '/admin/post/add'
             let that = this
             that.$axios.post(url, form).then(function (res) {
               console.log(`查询ok`)

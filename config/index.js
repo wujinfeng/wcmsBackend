@@ -32,11 +32,11 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {   // proxy all requests starting with /api to jsonplaceholder
-      '/api': {
+      '/admin': {
         target: 'http://127.0.0.1:3022/',
         changeOrigin: true,
         pathRewrite: {
-          '^/api': ''
+          '^/admin': '/admin'
         }
       }
     },

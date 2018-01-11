@@ -122,7 +122,7 @@
       let that = this
       that.id = that.$route.params._id
       if (that.id) {
-        that.$axios.get('/api/admin/post/get/' + that.id).then(function (res) {
+        that.$axios.get('/admin/post/get/' + that.id).then(function (res) {
           if (res.status === 200 && res.data.code === 200) {
             that.ruleForm = res.data.data
             that.$refs.tree.setCheckedKeys(res.data.data.postcategoryId)
@@ -147,9 +147,9 @@
               postcategoryId: that.$refs.tree.getCheckedKeys()
             }
             console.log(form)
-            let url = '/api/admin/post/add'
+            let url = '/admin/post/add'
             if (this.id) {
-              url = '/api/admin/post/update'
+              url = '/admin/post/update'
             }
             that.$axios.post(url, form).then(function (res) {
               if (res.status === 200 && res.data.code === 200) {
@@ -174,7 +174,7 @@
       loadNode (node, resolve) {
         let that = this
         if (node.level === 0) {
-          that.$axios.get('/api/admin/postcategory/getall').then(function (res) {
+          that.$axios.get('/admin/postcategory/getall').then(function (res) {
             if (res.status === 200 && res.data.code === 200) {
               let arr = res.data.data
               that.options = arr.map(function (item) {
@@ -185,7 +185,7 @@
           })
         }
         if (node.level >= 1) {
-          that.$axios.get('/api/admin/postcategory/getsub/' + node.key).then(function (res) {
+          that.$axios.get('/admin/postcategory/getsub/' + node.key).then(function (res) {
             let data = []
             if (res.status === 200 && res.data.code === 200) {
               let arr = res.data.data

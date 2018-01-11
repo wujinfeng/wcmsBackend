@@ -29,7 +29,7 @@
           id: that.id || '',
           password: that.ruleForm.oldpassword
         }
-        let url = '/api/admin/user/oldpassword'
+        let url = '/admin/user/oldpassword'
         that.$axios.post(url, params).then(function (res) {
           if (res.status === 200 && res.data.code === 200) {
             callback()
@@ -95,7 +95,7 @@
               id: that.id || '',
               password: that.ruleForm.newpassword
             }
-            let url = '/api/admin/user/newpassword'
+            let url = '/admin/user/newpassword'
             that.$axios.post(url, form).then(function (res) {
               if (res.status === 200 && res.data.code === 200) {
                 that.$message({type: 'success', message: '保存成功'})

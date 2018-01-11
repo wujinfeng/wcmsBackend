@@ -58,7 +58,7 @@ export default {
     let that = this
     console.log(this.id)
     if (that.id) {
-      that.$axios.get('/api/admin/postcategory/get/' + this.id).then(function (res) {
+      that.$axios.get('/admin/postcategory/get/' + this.id).then(function (res) {
         if (res.status === 200 && res.data.code === 200) {
           console.log(res.data.data)
           that.ruleForm = res.data.data
@@ -80,9 +80,9 @@ export default {
             image: that.ruleForm.image
           }
           console.log(form)
-          let url = '/api/admin/postcategory/add'
+          let url = '/admin/postcategory/add'
           if (that.id) {
-            url = '/api/admin/postcategory/update'
+            url = '/admin/postcategory/update'
           }
           that.$axios.post(url, form).then(function (res) {
             console.log(`添加ok`)
@@ -112,7 +112,7 @@ export default {
       console.log(node)
       let that = this
       if (node.level === 0) {
-        that.$axios.get('/api/admin/postcategory/getall').then(function (res) {
+        that.$axios.get('/admin/postcategory/getall').then(function (res) {
           if (res.status === 200 && res.data.code === 200) {
             let arr = res.data.data
             that.options = arr.map(function (item) {
@@ -123,7 +123,7 @@ export default {
         })
       }
       if (node.level >= 1) {
-        that.$axios.get('/api/admin/postcategory/getsub/' + node.key).then(function (res) {
+        that.$axios.get('/admin/postcategory/getsub/' + node.key).then(function (res) {
           let data = []
           if (res.status === 200 && res.data.code === 200) {
             let arr = res.data.data

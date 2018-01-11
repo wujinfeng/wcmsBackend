@@ -83,7 +83,7 @@
       let that = this
       that.id = that.$route.params._id
       if (that.id) {
-        that.$axios.get('/api/admin/user/get/' + that.id).then(function (res) {
+        that.$axios.get('/admin/user/get/' + that.id).then(function (res) {
           if (res.status === 200 && res.data.code === 200) {
             that.ruleForm = res.data.data
           }
@@ -106,9 +106,9 @@
               image: that.ruleForm.image
             }
             console.log(form)
-            let url = '/api/admin/user/add'
+            let url = '/admin/user/add'
             if (this.id) {
-              url = '/api/admin/user/update'
+              url = '/admin/user/update'
             }
             that.$axios.post(url, form).then(function (res) {
               if (res.status === 200 && res.data.code === 200) {
