@@ -33,7 +33,7 @@
     <hr>
     <el-table :data="tableData">
       <el-table-column prop="title" label="标题"></el-table-column>
-      <el-table-column prop="author" label="作者"></el-table-column>
+      <el-table-column prop="author.username" label="作者"></el-table-column>
       <el-table-column label="分类">
         <template slot-scope="scope">
           {{scope.row.postcategoryId | contactArr }}

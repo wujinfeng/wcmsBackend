@@ -17,7 +17,7 @@
         <el-menu-item :route="{name: 'MediaAdd'}" index="3-2">添加</el-menu-item>
       </el-submenu>
       <el-submenu index="4">
-        <template slot="title"><i class="el-icon-setting"></i>用户</template>
+        <template slot="title"><i class="el-icon-service"></i>用户</template>
         <el-menu-item :route="{name: 'UserList'}" index="4-1">用户列表</el-menu-item>
         <el-menu-item :route="{name: 'UserAdd'}" index="4-2">添加</el-menu-item>
       </el-submenu>
